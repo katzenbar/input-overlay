@@ -7,10 +7,16 @@
 
 #if defined(_WIN32)
 #define WIN32 1
+#define INITIALIZE_SDL_ON_MAIN_THREAD 0
 #define INIT_FLAGS_FOR_SDL (SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER)
-#else
-#define INIT_FLAGS_FOR_SDL (SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER)
+#elif defined(__APPLE__)
 #define WIN32 0
+#define INITIALIZE_SDL_ON_MAIN_THREAD 0
+#define INIT_FLAGS_FOR_SDL (SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER)
+#else
+#define WIN32 0
+#define INITIALIZE_SDL_ON_MAIN_THREAD 1
+#define INIT_FLAGS_FOR_SDL (SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER)
 #endif
 
 namespace gamepad_hook {
@@ -79,19 +85,19 @@ void start()
         differnt thread.
     */
 
-    if (!WIN32) {
+    if (INITIALIZE_SDL_ON_MAIN_THREAD) {
         sdl_init();
         local_gamepads = new gamepads;
     }
 
     sdl_poll_thread = std::thread([] {
-        if (WIN32) {
+        if (!INITIALIZE_SDL_ON_MAIN_THREAD) {
             sdl_init();
             local_gamepads = new gamepads;
         }
 
         local_gamepads->event_loop();
-        if (WIN32)
+        if (!INITIALIZE_SDL_ON_MAIN_THREAD)
             sdl_deinit();
     });
 }
@@ -104,7 +110,7 @@ void stop()
     sdl_poll_thread.join();
     delete local_gamepads;
     local_gamepads = nullptr;
-    if (!WIN32)
+    if (INITIALIZE_SDL_ON_MAIN_THREAD)
         sdl_deinit();
 }
 
