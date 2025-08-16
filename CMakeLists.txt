@@ -107,11 +107,11 @@ elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
 
     set(input-overlay_PLATFORM_SOURCES
         src/util/window_helper_nix.cpp
-        src/hook/uiohook_helper_linux.cpp)
+        src/hook/uiohook_helper_unix.cpp)
 elseif (APPLE)
      set(input-overlay_PLATFORM_SOURCES
-        src/util/window_helper_macos.cpp
-        src/hook/uiohook_helper_macos.cpp)
+        src/util/window_helper_osx.mm
+        src/hook/uiohook_helper_unix.cpp)
 endif()
 
 if (LOCAL_INSTALLATION)
