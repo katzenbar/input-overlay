@@ -20,8 +20,8 @@ if (WIN32 OR WIN64)
     set(SDL2_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/sdl2/include" CACHE STRING "" FORCE)
 
 else ()
-    INCLUDE(FindPkgConfig)
-    PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+    find_package(PkgConfig REQUIRED)
+    PKG_SEARCH_MODULE(SDL2 REQUIRED IMPORTED_TARGET sdl2)
 endif ()
 
 add_subdirectory(libuiohook)

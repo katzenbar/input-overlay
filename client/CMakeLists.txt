@@ -13,6 +13,13 @@ if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 endif()
 
+if (APPLE)
+    set(client_PLATFORM_DEPS
+            pthread)
+    find_package(PkgConfig REQUIRED)
+    PKG_SEARCH_MODULE(SDL2 REQUIRED IMPORTED_TARGET sdl2)
+endif()
+
 if (WIN32 OR WIN64)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
         set(SDL2_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/../deps/sdl2/bin/x64/SDL2.lib")
@@ -54,10 +61,17 @@ add_executable(${PROJECT_NAME} ${io_client_SOURCES})
 
 add_subdirectory(../deps/libuiohook ${CMAKE_CURRENT_BINARY_DIR}/libuiohook)
 
-target_link_libraries(${PROJECT_NAME}
-    uiohook
-    ${SDL2_LIBRARIES}
-    ${client_PLATFORM_DEPS})
+if (APPLE)
+  target_link_libraries(${PROJECT_NAME}
+      uiohook
+      PkgConfig::SDL2
+      ${client_PLATFORM_DEPS})
+else()
+  target_link_libraries(${PROJECT_NAME}
+      uiohook
+      ${SDL2_LIBRARIES}
+      ${client_PLATFORM_DEPS})
+endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${SDL2_INCLUDE_DIRS}

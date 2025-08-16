@@ -32,7 +32,7 @@ if (WIN32 OR WIN64)
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             ${SDL2_DLLS}
             $<TARGET_FILE_DIR:${PROJECT_NAME}>)
-        
+
         install(FILES ${SDL2_DLLS} DESTINATION
             CONFIGURATIONS RelWithDebInfo Debug Release
             DESTINATION obs-plugins/64bit
@@ -72,6 +72,13 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE OBS::obs-frontend-api)
 
 find_package(Qt6 COMPONENTS Widgets Core)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
+
+# Set up SDL2 for macOS
+if (APPLE)
+    find_package(PkgConfig REQUIRED)
+    PKG_SEARCH_MODULE(SDL2 REQUIRED IMPORTED_TARGET sdl2)
+endif()
+
 target_compile_options(
 ${CMAKE_PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:Clang,AppleClang>:-Wno-quoted-include-in-framework-header
                                 -Wno-comma>)
@@ -101,6 +108,10 @@ elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
     set(input-overlay_PLATFORM_SOURCES
         src/util/window_helper_nix.cpp
         src/hook/uiohook_helper_linux.cpp)
+elseif (APPLE)
+     set(input-overlay_PLATFORM_SOURCES
+        src/util/window_helper_macos.cpp
+        src/hook/uiohook_helper_macos.cpp)
 endif()
 
 if (LOCAL_INSTALLATION)
@@ -123,11 +134,19 @@ if (LOCAL_INSTALLATION)
     endif()
 endif()
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
-        ${input-overlay_PLATFORM_DEPS}
-        ${SDL2_LIBRARIES}
-        uiohook
-)
+if (APPLE)
+    target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
+            ${input-overlay_PLATFORM_DEPS}
+            PkgConfig::SDL2
+            uiohook
+    )
+else()
+    target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
+            ${input-overlay_PLATFORM_DEPS}
+            ${SDL2_LIBRARIES}
+            uiohook
+    )
+endif()
 
 target_include_directories(
     ${CMAKE_PROJECT_NAME}
