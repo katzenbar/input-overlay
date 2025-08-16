@@ -527,7 +527,6 @@
       //  Media Control Keys Begin
       0xe05e: ["VC_POWER", "POWER"],
       0xe05f: ["VC_SLEEP", "SLEEP"],
-      0xe063: ["VC_WAKE", "WAKE"],
 
       0xe022: ["VC_MEDIA_PLAY", "MEDIA PLAY"],
       0xe024: ["VC_MEDIA_STOP", "MEDIA STOP"],
@@ -1053,7 +1052,7 @@
       }, REPEAT_TIMEOUT);
     }
 
-    function compareSets(a, b) { 
+    function compareSets(a, b) {
       return a.size === b.size &&
       [...a].every((elem) => b.has(elem));
     }

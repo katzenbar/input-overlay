@@ -160,7 +160,6 @@ static const std::unordered_map<uint16_t, uint16_t> keyCodeMap = {
     {0x0E5D, VC_CONTEXT_MENU},
     {0xE05E, VC_POWER},
     {0xE05F, VC_SLEEP},
-    {0xE063, VC_WAKE},
     {0xE022, VC_MEDIA_PLAY},
     {0xE024, VC_MEDIA_STOP},
     {0xE010, VC_MEDIA_PREVIOUS},
