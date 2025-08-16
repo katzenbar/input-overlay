@@ -15,3 +15,8 @@ cmake-*/
 build/
 client/build-*/
 cmake/.CMakeBuildNumber
+
+# macos
+.DS_Store
+.deps/
+build_macos/
