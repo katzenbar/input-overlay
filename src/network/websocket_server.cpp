@@ -90,7 +90,7 @@ QString serialize_uiohook(const uiohook_event *e, const std::string &source_name
         obj["event_source"] = utf8_to_qt(source_name.c_str());
         obj["event_type"] = QString(ev_to_str(e->type));
         obj["time"] = int(e->time);
-        obj["mask"] = e->mask;
+        obj["mask"] = int(e->mask);
         obj["keycode"] = e->data.keyboard.keycode;
         obj["rawcode"] = e->data.keyboard.rawcode;
         break;
@@ -102,7 +102,7 @@ QString serialize_uiohook(const uiohook_event *e, const std::string &source_name
         obj["event_source"] = utf8_to_qt(source_name.c_str());
         obj["event_type"] = QString(ev_to_str(e->type));
         obj["time"] = int(e->time);
-        obj["mask"] = e->mask;
+        obj["mask"] = int(e->mask);
         obj["button"] = e->data.mouse.button;
         obj["clicks"] = e->data.mouse.clicks;
         obj["x"] = e->data.mouse.x;
@@ -112,7 +112,7 @@ QString serialize_uiohook(const uiohook_event *e, const std::string &source_name
         obj["event_source"] = utf8_to_qt(source_name.c_str());
         obj["event_type"] = QString(ev_to_str(e->type));
         obj["time"] = int(e->time);
-        obj["mask"] = e->mask;
+        obj["mask"] = int(e->mask);
         obj["type"] = e->data.wheel.type;
         obj["delta"] = e->data.wheel.delta;
         obj["rotation"] = e->data.wheel.rotation;
